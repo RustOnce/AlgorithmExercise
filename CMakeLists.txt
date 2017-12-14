@@ -17,4 +17,4 @@ set(CMAKE_CXX_FLAGS   "-Wall")                  # 开启所有警告
 set (CMAKE_CXX_FLAGS_DEBUG   "-O0")
 #set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG " )   # release包优化
 ##Executable file
-add_executable( ${PROJECT_NAME} ${Src} )
+add_executable(${PROJECT_NAME} ${Src})
