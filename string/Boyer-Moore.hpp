@@ -60,11 +60,24 @@ int SearchString(const string& hay, const string& needle)
         }
     }
     j = size2 - 2;
-    i = j;
+    i = 0;
     int n = 1;
+    vector<int> good_suffix(size2 - 1, -1);
     while(n < size2)
     {
-        
+        while(i < n && (j - i) > 0)
+        {
+            if(needle[j - i] == needle[size2 - i - 1])
+            {
+                ++i;
+                continue;
+            }
+            else
+            {
+                j = 
+            }
+
+        }
     }
 
 
