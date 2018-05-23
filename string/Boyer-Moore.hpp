@@ -41,9 +41,9 @@ int SearchString(const string& hay, const string& needle)
     vector<size_t> max_suffix(needle.size(), 0);
 
     i = size2 - 1;
+    int j = i + 1;
     while(--i >= 0)
     {
-        int j = i + 1;
         int temp = max_suffix[j];
         if(needle[i] == needle[size2 - 1 - temp])
         {
@@ -79,7 +79,7 @@ int SearchString(const string& hay, const string& needle)
         }
     }
 
-    
+
 
     return pos;
 }
