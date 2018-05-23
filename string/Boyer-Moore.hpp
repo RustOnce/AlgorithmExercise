@@ -35,16 +35,23 @@ int SearchString(const string& hay, const string& needle)
 
         return p;
     };
-    unordered_map<size_t, size_t> suffix_table;
+    
+    vector<int> suffix_table(hay.size() - 1, -1);
+    //length of max suffix from right to left.
     vector<size_t> max_suffix(needle.size(), 0);
-    int j = i = size2 - 1;
+
+    i = size2 - 1;
     while(--i >= 0)
     {
+        int j = i + 1;
         int temp = max_suffix[j];
         if(needle[i] == needle[size2 - 1 - temp])
         {
-            max_suffix[i] = max_suffix[j] + 1;
-            j = i;
+            max_suffix[i] = temp + 1;
+            if(suffix_table[temp + 1] == -1)
+            {
+                suffix_table[temp + 1] = i + temp;
+            }
         }
         else
         {
@@ -55,31 +62,24 @@ int SearchString(const string& hay, const string& needle)
             }
             else
             {
-                j = temp - 1;
+                j = size2 - temp;//size2 - 1 - (temp - 1);
             }
         }
     }
-    j = size2 - 2;
-    i = 0;
-    int n = 1;
-    vector<int> good_suffix(size2 - 1, -1);
-    while(n < size2)
+    
+    int n = max_suffix[0];
+    if(n != 0)
     {
-        while(i < n && (j - i) > 0)
+        for(int i = n + 1;i < size2 - 1;++i)
         {
-            if(needle[j - i] == needle[size2 - i - 1])
+            if(suffix_table[i] == -1)
             {
-                ++i;
-                continue;
+                suffix_table[i] = n - 1;
             }
-            else
-            {
-                j = 
-            }
-
         }
     }
 
+    
 
     return pos;
 }
