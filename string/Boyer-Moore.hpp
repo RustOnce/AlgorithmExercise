@@ -36,13 +36,13 @@ int SearchString(const string& hay, const string& needle)
         return p;
     };
     
-    vector<int> suffix_table(hay.size() - 1, -1);
+    vector<int> suffix_table(needle.size() - 1, -1);
     //length of max suffix from right to left.
     vector<size_t> max_suffix(needle.size(), 0);
 
-    i = size2 - 1;
-    int j = i + 1;
-    while(--i >= 0)
+    int j = i = size2 - 1;
+    --i;
+    while(i >= 0)
     {
         int temp = max_suffix[j];
         if(needle[i] == needle[size2 - 1 - temp])
@@ -52,6 +52,8 @@ int SearchString(const string& hay, const string& needle)
             {
                 suffix_table[temp + 1] = i + temp;
             }
+            j = i;
+            --i;
         }
         else
         {
@@ -59,6 +61,7 @@ int SearchString(const string& hay, const string& needle)
             {
                 max_suffix[i] = 0;
                 j = i;
+                --i;
             }
             else
             {
