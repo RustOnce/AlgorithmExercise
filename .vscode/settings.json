@@ -1,5 +1,9 @@
 {
     "files.associations": {
-        "utility": "cpp"
+        "utility": "cpp",
+        "iostream": "cpp",
+        "ios": "cpp",
+        "xiosbase": "cpp",
+        "string": "cpp"
     }
 }

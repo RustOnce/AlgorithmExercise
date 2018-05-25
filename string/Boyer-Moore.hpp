@@ -1,6 +1,7 @@
 #include <string>
 #include <map>
 #include <unordered_map>
+#include <algorithm>
 
 using namespace std;
 
@@ -36,7 +37,9 @@ int SearchString(const string& hay, const string& needle)
         return p;
     };
     
-    vector<int> suffix_table(needle.size() - 1, -1);
+    vector<int> substr_table(needle.size() - 1, size2);
+    substr_table[0] = 1;
+
     //length of max suffix from right to left.
     vector<size_t> max_suffix(needle.size(), 0);
 
@@ -48,9 +51,9 @@ int SearchString(const string& hay, const string& needle)
         if(needle[i] == needle[size2 - 1 - temp])
         {
             max_suffix[i] = temp + 1;
-            if(suffix_table[temp + 1] == -1)
+            if(substr_table[temp + 1] == size2)
             {
-                suffix_table[temp + 1] = i + temp;
+                substr_table[temp + 1] = size2 - 1 - i - temp;
             }
             j = i;
             --i;
@@ -73,16 +76,51 @@ int SearchString(const string& hay, const string& needle)
     int n = max_suffix[0];
     if(n != 0)
     {
+        int stride = size2 - n;
         for(int i = n + 1;i < size2 - 1;++i)
         {
-            if(suffix_table[i] == -1)
+            if(substr_table[i] == size2)
             {
-                suffix_table[i] = n - 1;
+                substr_table[i] = stride;
             }
         }
     }
 
+    i = size2 - 1;
+    j = 0;
+    while(i <= size1 - 1)
+    {
+        while(j < size2)
+        {
+            if(hay[i - j] == needle[size2 - 1 - j])
+            {
+                ++j;
+                continue;
+            }
+            else
+            {
+                int stride1 = 1;
+                int stride2 = 1;
+                char c = hay[i - j];
+                int p = GetCharPos(c);
+                if(p < size2 - 1 -j)
+                {
+                    stride1 = size2 - 1 - j - p;
+                }
 
+                stride2 = substr_table[j];
+                i += std::max(stride1, stride2);
+                j = 0;
+                            
+                break;
+            }
+        }
+        if(j == size2)
+        {
+            pos = i - size2 + 1;
+            break;
+        }
+    }
 
     return pos;
 }
