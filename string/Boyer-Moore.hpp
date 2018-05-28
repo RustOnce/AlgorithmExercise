@@ -5,16 +5,16 @@
 
 using namespace std;
 
-int SearchString(const string& hay, const string& needle)
+int SearchString(const string& haystack, const string& needle)
 {
     int pos = -1;
 
     if(needle.empty())
         return 0;
-    if(hay.empty())
+    if(haystack.empty())
         return pos;
 
-    int size1 = hay.size();
+    int size1 = haystack.size();
     int size2 = needle.size();
 
     unordered_map<char, size_t> char_map;
@@ -37,7 +37,7 @@ int SearchString(const string& hay, const string& needle)
         return p;
     };
     
-    vector<int> substr_table(needle.size() - 1, size2);
+    vector<int> substr_table(needle.size(), size2);
     substr_table[0] = 1;
 
     //length of max suffix from right to left.
@@ -92,7 +92,7 @@ int SearchString(const string& hay, const string& needle)
     {
         while(j < size2)
         {
-            if(hay[i - j] == needle[size2 - 1 - j])
+            if(haystack[i - j] == needle[size2 - 1 - j])
             {
                 ++j;
                 continue;
@@ -101,9 +101,13 @@ int SearchString(const string& hay, const string& needle)
             {
                 int stride1 = 1;
                 int stride2 = 1;
-                char c = hay[i - j];
+                char c = haystack[i - j];
                 int p = GetCharPos(c);
-                if(p < size2 - 1 -j)
+                if(p == -1)
+                {
+                    stride1 = size2 - j;
+                }
+                else if(p < size2 - 1 -j)
                 {
                     stride1 = size2 - 1 - j - p;
                 }
@@ -118,6 +122,61 @@ int SearchString(const string& hay, const string& needle)
         if(j == size2)
         {
             pos = i - size2 + 1;
+            break;
+        }
+    }
+
+    return pos;
+}
+
+int SundaySearch(const string& haystack, const string& needle)
+{
+    int pos = -1;
+
+    if(needle.empty())
+        return 0;
+    if(haystack.empty())
+        return pos;
+
+    int size1 = haystack.size();
+    int size2 = needle.size();
+
+    unordered_map<char, size_t> char_map;
+    int i = 0;
+    for(auto c : needle)
+    {
+        char_map[c] = i;
+        ++i;
+    }
+
+    int j = 0;
+    for(i = 0;i < size1 - size2;)
+    {
+        for(j = 0;j < size2;++j)
+        {
+            if(haystack[i + j] != needle[j])
+            {
+                if(i + j + 1 == size1)
+                {
+                    return -1;
+                }
+
+                auto it = char_map.find(haystack[i + size2]);
+                if(it == char_map.end())
+                {
+                    i += size2 + 1;
+                }
+                else
+                {
+                    i += size2 - it->second;
+                }
+                j = 0;
+                break;
+            }
+        }
+        if(j == size2)
+        {
+            pos = i;
             break;
         }
     }
